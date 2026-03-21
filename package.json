@@ -1,0 +1,60 @@
+{
+    "name": "@fr0st/state",
+    "version": "1.0.0",
+    "description": "Small reactive state primitives for values, effects, and keyed stores.",
+    "keywords": [
+        "state",
+        "reactive",
+        "signals",
+        "effects",
+        "store",
+        "state-management",
+        "javascript",
+        "esm"
+    ],
+    "homepage": "https://github.com/elusivecodes/FrostState",
+    "bugs": {
+        "url": "https://github.com/elusivecodes/FrostState/issues",
+        "email": "elusivecodes@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/elusivecodes/FrostState.git"
+    },
+    "license": "MIT",
+    "author": "Elusive <elusivecodes@gmail.com>",
+    "sideEffects": false,
+    "type": "module",
+    "exports": {
+        ".": "./src/index.js"
+    },
+    "main": "src/index.js",
+    "jsdelivr": "dist/frost-state.min.js",
+    "unpkg": "dist/frost-state.min.js",
+    "files": [
+        "dist",
+        "LICENSE",
+        "README.md",
+        "src"
+    ],
+    "scripts": {
+        "build": "npm run js-compile && npm run js-minify",
+        "js-compile": "rollup --config",
+        "js-lint": "eslint",
+        "js-minify": "terser --compress passes=2 --mangle --source-map \"content=dist/frost-state.js.map\" --output dist/frost-state.min.js dist/frost-state.js",
+        "test": "node --expose-gc ./node_modules/mocha/bin/mocha.js"
+    },
+    "devDependencies": {
+        "@fr0st/eslint-config": "^2.0.6",
+        "eslint": "^10.1.0",
+        "mocha": "^11.7.5",
+        "rollup": "^4.59.1",
+        "terser": "^5.46.1"
+    },
+    "engines": {
+        "node": "^20.19.0 || ^22.13.0 || >=24"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}
