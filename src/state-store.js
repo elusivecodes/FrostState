@@ -15,42 +15,6 @@ export default class StateStore extends Function {
     #state = new Map();
     #visibleKeys = new Set();
 
-    static #isReservedStateKey(key) {
-        return typeof key === 'string' && (
-            Object.prototype.hasOwnProperty.call(StateStore.prototype, key)
-        );
-    }
-
-    /**
-     * Wraps a plain object in a `StateStore`.
-     * Non-plain values are returned unchanged.
-     * @template T
-     * @param {T} value The value to wrap.
-     * @param {{ deep?: boolean }} [options] The wrap options.
-     * @param {boolean} [options.deep=false] Whether to recursively wrap nested plain objects.
-     * @returns {StateStore|T} The wrapped store, or the original value.
-     * @throws {TypeError} If the wrapped object contains a reserved `StateStore` key.
-     */
-    static wrap(value, options = { deep: false }) {
-        if (value instanceof StateStore) {
-            return value;
-        }
-
-        if (!isPlainObject(value)) {
-            return value;
-        }
-
-        const store = new StateStore();
-
-        for (const [key, val] of Object.entries(value)) {
-            store[key] = options.deep ?
-                StateStore.wrap(val, options) :
-                val;
-        }
-
-        return store;
-    }
-
     /**
      * Merges plain-object data into a `StateStore`.
      * Non-plain values replace the current value and are returned unchanged.
@@ -94,6 +58,42 @@ export default class StateStore extends Function {
         }
 
         return store;
+    }
+
+    /**
+     * Wraps a plain object in a `StateStore`.
+     * Non-plain values are returned unchanged.
+     * @template T
+     * @param {T} value The value to wrap.
+     * @param {{ deep?: boolean }} [options] The wrap options.
+     * @param {boolean} [options.deep=false] Whether to recursively wrap nested plain objects.
+     * @returns {StateStore|T} The wrapped store, or the original value.
+     * @throws {TypeError} If the wrapped object contains a reserved `StateStore` key.
+     */
+    static wrap(value, options = { deep: false }) {
+        if (value instanceof StateStore) {
+            return value;
+        }
+
+        if (!isPlainObject(value)) {
+            return value;
+        }
+
+        const store = new StateStore();
+
+        for (const [key, val] of Object.entries(value)) {
+            store[key] = options.deep ?
+                StateStore.wrap(val, options) :
+                val;
+        }
+
+        return store;
+    }
+
+    static #isReservedStateKey(key) {
+        return typeof key === 'string' && (
+            Object.prototype.hasOwnProperty.call(StateStore.prototype, key)
+        );
     }
 
     /**
@@ -240,22 +240,6 @@ export default class StateStore extends Function {
         return state;
     }
 
-    #readKey(key) {
-        if (this.#state.has(key)) {
-            return this.#state.get(key).value;
-        }
-
-        if (!isTrackingEffects()) {
-            return undefined;
-        }
-
-        const state = useState(undefined);
-
-        this.#state.set(key, state);
-
-        return state.value;
-    }
-
     #assignKey(key, value) {
         if (StateStore.#isReservedStateKey(key)) {
             throw new TypeError(`"${key}" is a reserved StateStore key`);
@@ -271,5 +255,21 @@ export default class StateStore extends Function {
 
         this.#state.set(key, state);
         this.#visibleKeys.add(key);
+    }
+
+    #readKey(key) {
+        if (this.#state.has(key)) {
+            return this.#state.get(key).value;
+        }
+
+        if (!isTrackingEffects()) {
+            return undefined;
+        }
+
+        const state = useState(undefined);
+
+        this.#state.set(key, state);
+
+        return state.value;
     }
 }

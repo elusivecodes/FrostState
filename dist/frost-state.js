@@ -7,6 +7,10 @@
     const activeEffects = [];
     const effectNextStates = new WeakMap();
 
+    /**
+     * Checks whether state reads are currently being tracked by an active effect.
+     * @returns {boolean} Whether an effect is currently collecting dependencies.
+     */
     function isTrackingEffects() {
         return activeEffects.length > 0;
     }

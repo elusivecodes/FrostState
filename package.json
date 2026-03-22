@@ -1,6 +1,6 @@
 {
     "name": "@fr0st/state",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Small reactive state primitives for values, effects, and keyed stores.",
     "keywords": [
         "state",
@@ -45,10 +45,10 @@
         "test": "node --expose-gc ./node_modules/mocha/bin/mocha.js"
     },
     "devDependencies": {
-        "@fr0st/eslint-config": "^2.0.6",
+        "@fr0st/eslint-config": "^3.0.0",
         "eslint": "^10.1.0",
         "mocha": "^11.7.5",
-        "rollup": "^4.59.1",
+        "rollup": "^4.60.0",
         "terser": "^5.46.1"
     },
     "engines": {
